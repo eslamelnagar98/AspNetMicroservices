@@ -1,0 +1,16 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.Linq.Expressions;
+global using System.Threading.Tasks;
+global using Ardalis.GuardClauses;
+global using Catalog.API.Configurations;
+global using Catalog.API.Data;
+global using Catalog.API.Entities;
+global using Catalog.API.Options;
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Options;
+global using MongoDB.Bson;
+global using MongoDB.Bson.Serialization.Attributes;
+global using MongoDB.Driver;
