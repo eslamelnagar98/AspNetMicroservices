@@ -1,15 +1,12 @@
-﻿using Catalog.API.Repositories;
-namespace Catalog.API.Configurations;
+﻿namespace Catalog.API.Configurations;
 public static class Registration
 {
     public static IServiceCollection AddCatalogServices(this IServiceCollection services)
     {
         services
-           .AddSingleton<ICatalogContext, CatalogContext>()
-           .AddSingleton<IProductRepository, ProductRepository>()
-           .AddEndpointsApiExplorer()
-           .AddSwaggerGen()
-           .AddControllers();
+           .AddScoped<ICatalogContext, CatalogContext>()
+           .AddScoped<IProductRepository, ProductRepository>()
+           .AddControllerConfigurations();
         return services;
     }
 
@@ -22,6 +19,15 @@ public static class Registration
              configuration.GetSection(DatabaseSettingsOptions.SectionName)
             .Bind(options))
             .ValidateOnStart();
+        return services;
+    }
+
+    private static IServiceCollection AddControllerConfigurations(this IServiceCollection services)
+    {
+        services
+            .AddEndpointsApiExplorer()
+            .AddSwaggerGen()
+            .AddControllers();
         return services;
     }
 }

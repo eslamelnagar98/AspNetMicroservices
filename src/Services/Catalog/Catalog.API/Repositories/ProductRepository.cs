@@ -13,13 +13,12 @@ public class ProductRepository : IProductRepository
             .InsertOneAsync(product);
     }
 
-    public async Task<bool> DeleteProduct(string id)
+    public async Task<IEnumerable<Product>> GetProducts()
     {
-        var deleteResult = await _catalogContext
+        return await _catalogContext
             .Products
-            .DeleteOneAsync(GenerateFilterDefination(p => p.Id, id));
-
-        return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
+            .Find(p => true)
+            .ToListAsync();
     }
 
     public async Task<Product> GetProduct(string id)
@@ -46,20 +45,21 @@ public class ProductRepository : IProductRepository
            .ToListAsync();
     }
 
-    public async Task<IEnumerable<Product>> GetProducts()
-    {
-        return await _catalogContext
-            .Products
-            .Find(p => true)
-            .ToListAsync();
-    }
-
     public async Task<bool> UpdateProduct(Product product)
     {
         var updateResult = await _catalogContext
             .Products
             .ReplaceOneAsync(p => p.Id == product.Id, product);
         return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
+    }
+
+    public async Task<bool> DeleteProduct(string id)
+    {
+        var deleteResult = await _catalogContext
+            .Products
+            .DeleteOneAsync(GenerateFilterDefination(p => p.Id, id));
+
+        return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
     }
 
     private FilterDefinition<Product> GenerateFilterDefination(Expression<Func<Product, string>> expression, string productValue)
