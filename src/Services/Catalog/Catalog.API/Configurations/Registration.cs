@@ -1,6 +1,23 @@
 ﻿namespace Catalog.API.Configurations;
 public static class Registration
 {
+    public static async Task RunCatalogAsync(this WebApplicationBuilder builder)
+    {
+        var app = default(WebApplication);
+        try
+        {
+            app = builder.Build();
+            app.UseSwagger()
+               .UseSwaggerUI()
+               .UseAuthorization();
+            app.MapControllers();
+            await app.RunAsync();
+        }
+        catch (Exception)
+        {
+            await app.StopAsync();
+        }
+    }
     public static IServiceCollection AddCatalogServices(this IServiceCollection services)
     {
         services

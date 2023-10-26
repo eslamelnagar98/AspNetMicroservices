@@ -17,7 +17,7 @@ public class ProductRepository : IProductRepository
     {
         return await _catalogContext
             .Products
-            .Find(p => true)
+            .Find(_ => true)
             .ToListAsync();
     }
 
