@@ -1,7 +1,7 @@
-﻿namespace Catalog.API.Configurations;
+﻿namespace Basket.API.Configurations;
 public static class Registration
 {
-    public static async Task RunCatalogAsync(this WebApplicationBuilder builder)
+    public static async Task RunBasketAsync(this WebApplicationBuilder builder)
     {
         var logger = default(Logger);
         var serviceName = string.Empty;
@@ -25,11 +25,11 @@ public static class Registration
             LogManager.Shutdown();
         }
     }
-    public static IServiceCollection AddCatalogServices(this IServiceCollection services)
+    public static IServiceCollection AddBasketServices(this IServiceCollection services)
     {
         services
-           .AddScoped<ICatalogContext, CatalogContext>()
-           .AddScoped<IProductRepository, ProductRepository>()
+           .AddRedisConnection()
+           .AddScoped<IBasketRepository,BasketRepository>()
            .AddControllerConfigurations();
         return services;
     }
@@ -37,10 +37,10 @@ public static class Registration
     public static IServiceCollection AddCatalogOptions(this IServiceCollection services)
     {
         services
-            .AddOptions<DatabaseSettingsOptions>()
+            .AddOptions<RedisConnectionStringOptions>()
             .Configure<IConfiguration>(
             (options, configuration) =>
-             configuration.GetSection(DatabaseSettingsOptions.SectionName)
+             configuration.GetSection(RedisConnectionStringOptions.SectionName)
             .Bind(options))
             .ValidateOnStart();
         return services;
@@ -53,5 +53,16 @@ public static class Registration
             .AddSwaggerGen()
             .AddControllers();
         return services;
+    }
+
+    private static IServiceCollection AddRedisConnection(this IServiceCollection services)
+    {
+        return services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
+        {
+            var option = serviceProvider.GetRequiredService<IOptions<RedisConnectionStringOptions>>()?.Value;
+            //var configuration = $"{option.Host}:{option.Port}";
+            var configuration = new ConfigurationOptions { EndPoints = { $"{option.Host}:{option.Port}" } };
+            return ConnectionMultiplexer.Connect(configuration);
+        });
     }
 }

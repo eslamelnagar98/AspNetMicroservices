@@ -1,4 +1,4 @@
-﻿namespace Catalog.API.Configurations;
+﻿namespace Basket.API.Configurations;
 public static class WebApplicationBuilderFactory
 {
     public static WebApplicationBuilder Create(string[] args)
@@ -8,7 +8,7 @@ public static class WebApplicationBuilderFactory
         builder
             .Services
             .AddCatalogOptions()
-            .AddCatalogServices();
+            .AddBasketServices();
         return builder;
     }
 }
