@@ -1,3 +1,3 @@
-await WebApplicationBuilderFactory.Create(args)
+await WebApplicationBuilderFactory.CreateCatalogWepBuilder(args)
                                   .RunCatalogAsync();
 

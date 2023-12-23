@@ -34,7 +34,7 @@ public static class Registration
         return services;
     }
 
-    public static IServiceCollection AddCatalogOptions(this IServiceCollection services)
+    public static IServiceCollection AddBasketOptions(this IServiceCollection services)
     {
         services
             .AddOptions<RedisConnectionStringOptions>()
@@ -60,7 +60,6 @@ public static class Registration
         return services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
         {
             var option = serviceProvider.GetRequiredService<IOptions<RedisConnectionStringOptions>>()?.Value;
-            //var configuration = $"{option.Host}:{option.Port}";
             var configuration = new ConfigurationOptions { EndPoints = { $"{option.Host}:{option.Port}" } };
             return ConnectionMultiplexer.Connect(configuration);
         });

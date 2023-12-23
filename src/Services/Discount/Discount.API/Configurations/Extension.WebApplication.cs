@@ -1,4 +1,4 @@
-﻿namespace Basket.API.Configurations;
+﻿namespace Discount.API.Configurations;
 public static partial class Extension
 {
     public static WebApplication AddMiddlewares(this WebApplication app)

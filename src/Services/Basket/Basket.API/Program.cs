@@ -1,2 +1,2 @@
-await WebApplicationBuilderFactory.Create(args)
+await WebApplicationBuilderFactory.CreateBasketWebBuilder(args)
                                   .RunBasketAsync();    

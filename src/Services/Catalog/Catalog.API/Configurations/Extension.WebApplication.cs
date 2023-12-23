@@ -12,7 +12,8 @@ public static partial class Extension
 
     public static Logger GetLogger()
     {
-        return LogManager.Setup()
+        return LogManager
+            .Setup()
             .LoadConfigurationFromAppSettings()
             .GetCurrentClassLogger();
     }
