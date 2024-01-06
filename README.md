@@ -11,7 +11,7 @@ docker run -d -p 27017:27017 --name shopping-mongo mongo
 2. Run Redis Container Using Docker In Your Local Machine run below command:
 
 ```csharp
-docker run -d -p 6379:6379 --name aspnetrun-redis redis
+docker run -d -p 6379:6379 --name aspnetrun-redis redis:alpine
 ```
 
 # Run Docker Compose To Orchestrating AspNetMicroservices
