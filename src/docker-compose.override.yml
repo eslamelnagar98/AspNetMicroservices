@@ -83,3 +83,13 @@ services:
     ports:
       - "8002:8080"
 
+
+  discount.grpc:
+    container_name: discount.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DockerCompose
+      - ASPNETCORE_HTTP_PORTS=8080
+    depends_on:
+      -  discountdb   
+    ports:
+      - "8003:8080" 

@@ -18,7 +18,7 @@ docker run -d -p 6379:6379 --name aspnetrun-redis redis:alpine
 
 1. At the root directory which include **docker-compose.yml** files, run below command:
 ```csharp
-docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --build
 ```
 
 2. Stop All Containers Orchestrating Using **docker-compose** , run below command:

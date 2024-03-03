@@ -7,7 +7,8 @@ public static class WebApplicationBuilderFactory
         builder.Host.UseNLog();
         builder
             .Services
-            .AddBasketOptions()
+            .AddBasketOptions<RedisConnectionStringOptions>(RedisConnectionStringOptions.SectionName)
+            .AddBasketOptions<GrpcSettingsOptions>(GrpcSettingsOptions.SectionName)
             .AddBasketServices();
         return builder;
     }

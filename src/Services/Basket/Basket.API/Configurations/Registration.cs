@@ -1,4 +1,6 @@
-﻿namespace Basket.API.Configurations;
+﻿using Microsoft.Extensions.Logging;
+
+namespace Basket.API.Configurations;
 public static class Registration
 {
     public static async Task RunBasketAsync(this WebApplicationBuilder builder)
@@ -29,19 +31,19 @@ public static class Registration
     {
         services
            .AddRedisConnection()
-           .AddScoped<IBasketRepository,BasketRepository>()
-           .AddControllerConfigurations();
+           .AddGrpcClientConnection()
+           .AddControllerConfigurations()
+           .AddScoped<IBasketRepository, BasketRepository>()
+           .AddScoped<DiscountGrpcService>();
         return services;
     }
 
-    public static IServiceCollection AddBasketOptions(this IServiceCollection services)
+    public static IServiceCollection AddBasketOptions<TOptions>(this IServiceCollection services, string sectionName)
+        where TOptions : class
     {
         services
-            .AddOptions<RedisConnectionStringOptions>()
-            .Configure<IConfiguration>(
-            (options, configuration) =>
-             configuration.GetSection(RedisConnectionStringOptions.SectionName)
-            .Bind(options))
+            .AddOptions<TOptions>()
+            .Configure<IConfiguration>((options, configuration) => configuration.GetSection(sectionName).Bind(options))
             .ValidateOnStart();
         return services;
     }
@@ -63,5 +65,25 @@ public static class Registration
             var configuration = new ConfigurationOptions { EndPoints = { $"{option.Host}:{option.Port}" } };
             return ConnectionMultiplexer.Connect(configuration);
         });
+    }
+
+    private static IServiceCollection AddGrpcClientConnection(this IServiceCollection services)
+    {
+        services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>((serviceProvider, options) =>
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+            try
+            {
+                var gRPCOptions = serviceProvider.GetRequiredService<IOptions<GrpcSettingsOptions>>()?.Value;
+                logger.LogInformation($"gRPC Options Discount Url Value Is {gRPCOptions.DiscountUrl}");
+                options.Address = new Uri(gRPCOptions.DiscountUrl);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Exception Happened While Trying To Handle AddGrpcClientConnection Method");
+                throw;
+            }
+        });
+        return services;
     }
 }
