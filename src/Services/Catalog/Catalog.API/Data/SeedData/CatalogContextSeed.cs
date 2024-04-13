@@ -4,11 +4,13 @@ public class CatalogContextSeed
     public static void SeedData(IMongoCollection<Product> productCollection)
     {
         var filter = Builders<Product>.Filter.Empty;
-        var isExistsProduct = productCollection.Find(filter).Limit(1).Any();
+        var isExistsProduct = productCollection
+            .Find(filter)
+            .Limit(1)
+            .Any();
         if (isExistsProduct)
-        {
             return;
-        }
+
         productCollection.InsertMany(GetPreConfiguredProducts());
 
     }
